@@ -2,19 +2,19 @@
 'context-menu':
   'atom-text-editor': [
     {
-      'label': 'Toggle my-package'
-      'command': 'my-package:toggle'
+      'label': 'Insert Date'
+      'command': 'insert-date:current-editor'
     }
   ]
 'menu': [
   {
     'label': 'Packages'
     'submenu': [
-      'label': 'my-package'
+      'label': 'Insert Date'
       'submenu': [
         {
-          'label': 'Toggle'
-          'command': 'my-package:toggle'
+          'label': 'Current Editor'
+          'command': 'insert-date:current-editor'
         }
       ]
     ]
