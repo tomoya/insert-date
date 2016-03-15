@@ -1,62 +1,35 @@
-MyPackage = require '../lib/my-package'
-
-# Use the command `window:run-package-specs` (cmd-alt-ctrl-p) to run specs.
-#
-# To run a specific `it` or `describe` block add an `f` to the front (e.g. `fit`
-# or `fdescribe`). Remove the `f` to unfocus the block.
-
-describe "MyPackage", ->
-  [workspaceElement, activationPromise] = []
+describe "InsertDate", ->
+  # テスト内で使用する変数を定義する
+  [textEditor, activationPromise, textEditorElement] = []
 
   beforeEach ->
-    workspaceElement = atom.views.getView(atom.workspace)
-    activationPromise = atom.packages.activatePackage('my-package')
+    # パッケージをアクティベートする関数を変数に代入する
+    activationPromise = atom.packages.activatePackage('insert-date')
 
-  describe "when the my-package:toggle event is triggered", ->
-    it "hides and shows the modal panel", ->
-      # Before the activation event the view is not on the DOM, and no panel
-      # has been created
-      expect(workspaceElement.querySelector('.my-package')).not.toExist()
+    waitsForPromise ->
+      # atom-workspaceを作成する
+      atom.workspace.open().then (editor) ->
+        # エディタを定義する
+        textEditor = editor
+        # atom-text-editor要素を定義する
+        textEditorElement = atom.views.getView(textEditor)
 
-      # This is an activation event, triggering it will cause the package to be
-      # activated.
-      atom.commands.dispatch workspaceElement, 'my-package:toggle'
+    runs ->
+      # コマンドを実行し、アクティベート可能にする
+      atom.commands.dispatch textEditorElement, 'insert-date:current-editor'
 
-      waitsForPromise ->
-        activationPromise
+    waitsForPromise ->
+      # パッケージをアクティベートする
+      activationPromise
 
-      runs ->
-        expect(workspaceElement.querySelector('.my-package')).toExist()
+  describe "insert-date:current-editor", ->
+    beforeEach ->
+      # バッファを空にする
+      textEditor.setText("")
 
-        myPackageElement = workspaceElement.querySelector('.my-package')
-        expect(myPackageElement).toExist()
-
-        myPackagePanel = atom.workspace.panelForItem(myPackageElement)
-        expect(myPackagePanel.isVisible()).toBe true
-        atom.commands.dispatch workspaceElement, 'my-package:toggle'
-        expect(myPackagePanel.isVisible()).toBe false
-
-    it "hides and shows the view", ->
-      # This test shows you an integration test testing at the view level.
-
-      # Attaching the workspaceElement to the DOM is required to allow the
-      # `toBeVisible()` matchers to work. Anything testing visibility or focus
-      # requires that the workspaceElement is on the DOM. Tests that attach the
-      # workspaceElement to the DOM are generally slower than those off DOM.
-      jasmine.attachToDOM(workspaceElement)
-
-      expect(workspaceElement.querySelector('.my-package')).not.toExist()
-
-      # This is an activation event, triggering it causes the package to be
-      # activated.
-      atom.commands.dispatch workspaceElement, 'my-package:toggle'
-
-      waitsForPromise ->
-        activationPromise
-
-      runs ->
-        # Now we can test for view visibility
-        myPackageElement = workspaceElement.querySelector('.my-package')
-        expect(myPackageElement).toBeVisible()
-        atom.commands.dispatch workspaceElement, 'my-package:toggle'
-        expect(myPackageElement).not.toBeVisible()
+    it "runs", ->
+      # コマンドを実行する
+      atom.commands.dispatch textEditorElement, 'insert-date:current-editor'
+      # バッファ内のテキストを比較する
+      console.log(textEditor)
+      expect(textEditor.getText()).toBe new Date().toLocaleString()

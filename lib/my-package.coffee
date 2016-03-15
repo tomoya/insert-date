@@ -1,33 +1,16 @@
-MyPackageView = require './my-package-view'
 {CompositeDisposable} = require 'atom'
 
-module.exports = MyPackage =
-  myPackageView: null
-  modalPanel: null
+module.exports = InsertDate =
   subscriptions: null
 
-  activate: (state) ->
-    @myPackageView = new MyPackageView(state.myPackageViewState)
-    @modalPanel = atom.workspace.addModalPanel(item: @myPackageView.getElement(), visible: false)
-
-    # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
+  activate: ->
     @subscriptions = new CompositeDisposable
-
-    # Register command that toggles this view
-    @subscriptions.add atom.commands.add 'atom-workspace', 'my-package:toggle': => @toggle()
+    @subscriptions.add atom.commands.add 'atom-text-editor',
+      'insert-date:current-editor': => @insertDate()
 
   deactivate: ->
-    @modalPanel.destroy()
     @subscriptions.dispose()
-    @myPackageView.destroy()
 
-  serialize: ->
-    myPackageViewState: @myPackageView.serialize()
-
-  toggle: ->
-    console.log 'MyPackage was toggled!'
-
-    if @modalPanel.isVisible()
-      @modalPanel.hide()
-    else
-      @modalPanel.show()
+  insertDate: ->
+    editor = atom.workspace.getActiveTextEditor()
+    editor.insertText(new Date().toLocaleString())
