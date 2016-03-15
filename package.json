@@ -3,8 +3,7 @@
   "main": "./lib/my-package",
   "version": "0.0.0",
   "description": "A short description of your package",
-  "keywords": [
-  ],
+  "keywords": [],
   "activationCommands": {
     "atom-text-editor": "insert-date:current-editor"
   },
@@ -14,5 +13,6 @@
     "atom": ">=1.0.0 <2.0.0"
   },
   "dependencies": {
+    "moment": "^2.12.0"
   }
 }

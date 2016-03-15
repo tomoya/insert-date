@@ -1,3 +1,5 @@
+moment = require 'moment'
+
 describe "InsertDate", ->
   # テスト内で使用する変数を定義する
   [textEditor, activationPromise, textEditorElement] = []
@@ -28,8 +30,31 @@ describe "InsertDate", ->
       textEditor.setText("")
 
     it "runs", ->
+      # 設定に値をセットする
+      atom.config.set('insert-date.customFormat', 'D/MMM/YYYY')
+      atom.config.set('insert-date.useCustomFormat', false)
+      atom.config.set('insert-date.format', 'YYYY-MM-DD')
       # コマンドを実行する
       atom.commands.dispatch textEditorElement, 'insert-date:current-editor'
       # バッファ内のテキストを比較する
-      console.log(textEditor)
-      expect(textEditor.getText()).toBe new Date().toLocaleString()
+      expect(textEditor.getText()).toBe moment().format('YYYY-MM-DD')
+      console.log textEditor.getText()
+
+      # バッファを消去する
+      textEditor.setText('')
+      atom.config.set('insert-date.format', 'MM-DD-YYYY')
+      atom.commands.dispatch textEditorElement, 'insert-date:current-editor'
+      expect(textEditor.getText()).toBe moment().format('MM-DD-YYYY')
+      console.log textEditor.getText()
+
+      textEditor.setText('')
+      atom.config.set('insert-date.format', 'MM/DD/YYYY')
+      atom.commands.dispatch textEditorElement, 'insert-date:current-editor'
+      expect(textEditor.getText()).toBe moment().format('MM/DD/YYYY')
+      console.log textEditor.getText()
+
+      textEditor.setText('')
+      atom.config.set('insert-date.useCustomFormat', true)
+      atom.commands.dispatch textEditorElement, 'insert-date:current-editor'
+      expect(textEditor.getText()).toBe moment().format('D/MMM/YYYY')
+      console.log textEditor.getText()
