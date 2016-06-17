@@ -2,12 +2,12 @@
   "name": "insert-date",
   "main": "./lib/my-package",
   "version": "0.0.0",
-  "description": "A short description of your package",
+  "description": "An example Atom package for inserting date on cusor",
   "keywords": [],
   "activationCommands": {
     "atom-text-editor": "insert-date:current-editor"
   },
-  "repository": "https://github.com/atom/my-package",
+  "repository": "https://github.com/tomoya/insert-date",
   "license": "MIT",
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
